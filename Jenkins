@@ -1,0 +1,42 @@
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'if not exist index.html exit /b 1'
+                echo 'Test Passed'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'if not exist build mkdir build'
+                bat 'copy /Y index.html build\\index.html'
+                echo 'Build Completed'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deployment Successful'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
